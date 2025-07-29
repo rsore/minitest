@@ -1,5 +1,7 @@
 # minitest.h
 
+![CI](https://github.com/rsore/minitest/actions/workflows/selftest.yml/badge.svg)
+
 A minimal single‑header test library for C.
 Public domain (Unlicense) — free for any use.
 
