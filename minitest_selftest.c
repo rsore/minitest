@@ -3,7 +3,6 @@
 #include "minitest.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 
 MT_DEFINE_TEST(int_add_check_ok)
 {
@@ -29,13 +28,13 @@ MT_DEFINE_TEST(int_add_assert_fail)
     MT_ASSERT_THAT(35 + 34 != 69);
 }
 
-static int all_tests_meet_expectations = 1;
+static int tests_not_meeting_expectation = 0;
 
 #define RUN_TEST_WRAPPER(name, expect_success)                          \
     MT_RUN_TEST(name);                                                  \
     if (mt_test_success_ != expect_success) {                           \
         fprintf(stderr, "Test \"%s\" expected to %s, but expectation was not met.\n", #name, expect_success ? "succeed" : "fail"); \
-        all_tests_meet_expectations = 0;                                \
+        tests_not_meeting_expectation += 1;                             \
     }
 
 int
@@ -48,5 +47,5 @@ main(void)
     RUN_TEST_WRAPPER(int_add_assert_ok, 1);
     RUN_TEST_WRAPPER(int_add_assert_fail, 0);
 
-    return all_tests_meet_expectations ? 0 : 1;
+    return tests_not_meeting_expectation;
 }
