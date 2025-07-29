@@ -4,9 +4,12 @@
  *  | \_/ | | | ' | | | | | _|`._`. | |
  *  |_| |_|_|_|\__|_| |_| |___|___/ |_|
  *
+ *  minitest.h — v1.0.0
+ *
  *
  *  This file is placed in the public domain.
  *  See end of file for license details.
+ *
  *
  *  Example usage:
  *

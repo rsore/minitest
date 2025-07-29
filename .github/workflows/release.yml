@@ -1,0 +1,23 @@
+name: release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: minitest.h
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
