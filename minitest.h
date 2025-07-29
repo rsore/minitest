@@ -91,14 +91,14 @@ static int mt_total_failure_count_;
 
 #define MT_RUN_TEST(name)                                               \
     do {                                                                \
-        MT_PRINT_OK(MT_ANSI_BOLD_ MT_ANSI_GREEN_ "[ RUN        ]" MT_ANSI_CLEAR_ " %s\n", #name); \
+        MT_PRINT_OK(MT_ANSI_BOLD_ MT_ANSI_GREEN_ "[ RUN         ]" MT_ANSI_CLEAR_ " %s\n", #name); \
         mt_test_success_ = 1;                                           \
         MT_NAMEOF_TEST_FUNC_(name)();                                   \
         if (mt_test_success_) {                                         \
-            MT_PRINT_OK(MT_ANSI_BOLD_ MT_ANSI_GREEN_ "[         OK ]" MT_ANSI_CLEAR_ " %s\n\n", #name); \
+            MT_PRINT_OK(MT_ANSI_BOLD_ MT_ANSI_GREEN_ "[          OK ]" MT_ANSI_CLEAR_ " %s\n\n", #name); \
             mt_total_success_count_ += 1;                               \
         } else {                                                        \
-            MT_PRINT_OK(MT_ANSI_BOLD_ MT_ANSI_RED_ "[    FAILURE ]" MT_ANSI_CLEAR_ " %s\n\n", #name); \
+            MT_PRINT_OK(MT_ANSI_BOLD_ MT_ANSI_RED_ "[     FAILURE ]" MT_ANSI_CLEAR_ " %s\n\n", #name); \
             mt_total_failure_count_ += 1;                               \
         }                                                               \
     } while (0)
