@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-and-test-linux:
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,3 +29,18 @@ jobs:
 
       - name: Run selftest
         run: ./minitest_selftest
+  build-and-test-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC environment and compile selftest
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cl /TC /W4 /std:c11 minitest_selftest.c /Fe:minitest_selftest.exe /wd4127
+
+      - name: Run selftest
+        run: .\minitest_selftest.exe
