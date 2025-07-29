@@ -1,0 +1,31 @@
+name: selftest
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        standard: [c99, c11]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show compiler version
+        run: ${{ matrix.compiler }} --version
+
+      - name: Compile selftest
+        run: |
+          ${{ matrix.compiler }} -Wall -Wextra -pedantic -std=${{ matrix.standard }} \
+            -o minitest_selftest minitest_selftest.c
+
+      - name: Run selftest
+        run: ./minitest_selftest
