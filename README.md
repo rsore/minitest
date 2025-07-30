@@ -2,8 +2,9 @@
 
 ![CI](https://github.com/rsore/minitest/actions/workflows/selftest.yml/badge.svg)
 
-A minimal single‑header test library for C.
-Public domain (Unlicense) — free for any use.
+`minitest.h` is a single-header library: copy it into your project and start writing tests.
+No build system or extra dependencies required.
+It’s lightweight, portable across major platforms, and public domain.
 
 ## Features
 
