@@ -4,7 +4,7 @@
  *  | \_/ | | | ' | | | | | _|`._`. | |
  *  |_| |_|_|_|\__|_| |_| |___|___/ |_|
  *
- *  minitest.h — v1.1.0
+ *  minitest.h — v1.1.1
  *
  *
  *  This file is placed in the public domain.
@@ -58,7 +58,11 @@
 #endif
 
 #ifndef MT_PRINT_OK
-#define MT_PRINT_OK(...) fprintf(stdout, __VA_ARGS__)
+// I would really prefer to have PRINT_OK output to stdout
+// by default. However, Github runners tend to buffer stdout
+// but not stderr, leading to outputs in the wrong order.
+// So I send everything to stderr.
+#define MT_PRINT_OK(...) fprintf(stderr, __VA_ARGS__)
 #endif
 
 #ifndef MT_PRINT_ERR
@@ -120,7 +124,7 @@ static int mt__internal__total_assert_failure_count_;
 #define MT_CHECK_THAT(cond)                                                                                                              \
     do {                                                                                                                                 \
         if ((cond)) {                                                                                                                    \
-            MT_PRINT_ERR(MT__INTERNAL__ANSI_GREEN_ "%s:%d: Check succeeded: %s\n" MT__INTERNAL__ANSI_CLEAR_, __FILE__, __LINE__, #cond); \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ "%s:%d: Check succeeded: %s\n" MT__INTERNAL__ANSI_CLEAR_, __FILE__, __LINE__, #cond);  \
             mt__internal__total_check_success_count_ += 1;                                                                               \
         } else {                                                                                                                         \
             MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ "%s:%d: Check failed: %s\n" MT__INTERNAL__ANSI_CLEAR_, __FILE__, __LINE__, #cond);      \
@@ -132,7 +136,7 @@ static int mt__internal__total_assert_failure_count_;
 #define MT_ASSERT_THAT(cond)                                                                                                                 \
     do {                                                                                                                                     \
         if ((cond)) {                                                                                                                        \
-            MT_PRINT_ERR(MT__INTERNAL__ANSI_GREEN_ "%s:%d: Assertion succeeded: %s\n" MT__INTERNAL__ANSI_CLEAR_, __FILE__, __LINE__, #cond); \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ "%s:%d: Assertion succeeded: %s\n" MT__INTERNAL__ANSI_CLEAR_, __FILE__, __LINE__, #cond);  \
             mt__internal__total_assert_success_count_ += 1;                                                                                  \
         } else {                                                                                                                             \
             MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ "%s:%d: Assertion failed: %s\n" MT__INTERNAL__ANSI_CLEAR_, __FILE__, __LINE__, #cond);      \
@@ -142,56 +146,56 @@ static int mt__internal__total_assert_failure_count_;
         }                                                                                                                                    \
     } while (0)
 
-#define MT_PRINT_SUMMARY()                                                                                                                           \
-    do {                                                                                                                                             \
-        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "===== Summary =====\n\n" MT__INTERNAL__ANSI_CLEAR_);                          \
-        const int mt__internal__total_tests_run_ =                                                                                                   \
-            mt__internal__total_test_success_count_ + mt__internal__total_test_failure_count_;                                                       \
-        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "Total tests run: .............. %d\n" MT__INTERNAL__ANSI_CLEAR_,              \
-                    mt__internal__total_tests_run_);                                                                                                 \
-        if (mt__internal__total_test_success_count_ == mt__internal__total_tests_run_) {                                                             \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total tests succeeded: ........ %d\n" MT__INTERNAL__ANSI_CLEAR_,         \
-                        mt__internal__total_test_success_count_);                                                                                    \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total tests failed: ........... %d\n\n" MT__INTERNAL__ANSI_CLEAR_,       \
-                        mt__internal__total_test_failure_count_);                                                                                    \
-        } else {                                                                                                                                     \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total tests succeeded: ........ %d\n" MT__INTERNAL__ANSI_CLEAR_,           \
-                        mt__internal__total_test_success_count_);                                                                                    \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total tests failed: ........... %d\n\n" MT__INTERNAL__ANSI_CLEAR_,         \
-                        mt__internal__total_test_failure_count_);                                                                                    \
-        }                                                                                                                                            \
-                                                                                                                                                     \
-        const int mt__internal__total_checks_done_ =                                                                                                 \
-            mt__internal__total_check_success_count_ + mt__internal__total_check_failure_count_;                                                     \
-        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "Total checks done: ................ %d\n" MT__INTERNAL__ANSI_CLEAR_,          \
-                    mt__internal__total_checks_done_);                                                                                               \
-        if (mt__internal__total_check_success_count_ == mt__internal__total_checks_done_) {                                                          \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total checks succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,     \
-                        mt__internal__total_check_success_count_);                                                                                   \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total checks failed: .............. %d\n\n" MT__INTERNAL__ANSI_CLEAR_,   \
-                        mt__internal__total_check_failure_count_);                                                                                   \
-        } else {                                                                                                                                     \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total checks succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,       \
-                        mt__internal__total_check_success_count_);                                                                                   \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total checks failed: .............. %d\n\n" MT__INTERNAL__ANSI_CLEAR_,     \
-                        mt__internal__total_check_failure_count_);                                                                                   \
-        }                                                                                                                                            \
-                                                                                                                                                     \
-        const int mt__internal__total_asserts_done_ =                                                                                                \
-            mt__internal__total_assert_success_count_ + mt__internal__total_assert_failure_count_;                                                   \
-        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "Total assertions done: ................ %d\n" MT__INTERNAL__ANSI_CLEAR_,      \
-                    mt__internal__total_asserts_done_);                                                                                              \
-        if (mt__internal__total_assert_success_count_ == mt__internal__total_asserts_done_) {                                                        \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total assertions succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_, \
-                        mt__internal__total_assert_success_count_);                                                                                  \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total assertions failed: .............. %d\n" MT__INTERNAL__ANSI_CLEAR_, \
-                        mt__internal__total_assert_failure_count_);                                                                                  \
-        } else {                                                                                                                                     \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total assertions succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,   \
-                        mt__internal__total_assert_success_count_);                                                                                  \
-            MT_PRINT_OK(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total assertions failed: .............. %d\n" MT__INTERNAL__ANSI_CLEAR_,   \
-                        mt__internal__total_assert_failure_count_);                                                                                  \
-        }                                                                                                                                            \
+#define MT_PRINT_SUMMARY()                                                                                                                            \
+    do {                                                                                                                                              \
+        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "===== Summary =====\n\n" MT__INTERNAL__ANSI_CLEAR_);                           \
+        const int mt__internal__total_tests_run_ =                                                                                                    \
+            mt__internal__total_test_success_count_ + mt__internal__total_test_failure_count_;                                                        \
+        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "Total tests run: .............. %d\n" MT__INTERNAL__ANSI_CLEAR_,               \
+                    mt__internal__total_tests_run_);                                                                                                  \
+        if (mt__internal__total_test_success_count_ == mt__internal__total_tests_run_) {                                                              \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total tests succeeded: ........ %d\n" MT__INTERNAL__ANSI_CLEAR_,          \
+                        mt__internal__total_test_success_count_);                                                                                     \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total tests failed: ........... %d\n\n" MT__INTERNAL__ANSI_CLEAR_,        \
+                        mt__internal__total_test_failure_count_);                                                                                     \
+        } else {                                                                                                                                      \
+            MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total tests succeeded: ........ %d\n" MT__INTERNAL__ANSI_CLEAR_,           \
+                        mt__internal__total_test_success_count_);                                                                                     \
+            MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total tests failed: ........... %d\n\n" MT__INTERNAL__ANSI_CLEAR_,         \
+                        mt__internal__total_test_failure_count_);                                                                                     \
+        }                                                                                                                                             \
+                                                                                                                                                      \
+        const int mt__internal__total_checks_done_ =                                                                                                  \
+            mt__internal__total_check_success_count_ + mt__internal__total_check_failure_count_;                                                      \
+        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "Total checks done: ................ %d\n" MT__INTERNAL__ANSI_CLEAR_,           \
+                    mt__internal__total_checks_done_);                                                                                                \
+        if (mt__internal__total_check_success_count_ == mt__internal__total_checks_done_) {                                                           \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total checks succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,      \
+                        mt__internal__total_check_success_count_);                                                                                    \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total checks failed: .............. %d\n\n" MT__INTERNAL__ANSI_CLEAR_,    \
+                        mt__internal__total_check_failure_count_);                                                                                    \
+        } else {                                                                                                                                      \
+            MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total checks succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,       \
+                        mt__internal__total_check_success_count_);                                                                                    \
+            MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total checks failed: .............. %d\n\n" MT__INTERNAL__ANSI_CLEAR_,     \
+                        mt__internal__total_check_failure_count_);                                                                                    \
+        }                                                                                                                                             \
+                                                                                                                                                      \
+        const int mt__internal__total_asserts_done_ =                                                                                                 \
+            mt__internal__total_assert_success_count_ + mt__internal__total_assert_failure_count_;                                                    \
+        MT_PRINT_OK(MT__INTERNAL__ANSI_BLUE_ MT__INTERNAL__ANSI_BOLD_ "Total assertions done: ................ %d\n" MT__INTERNAL__ANSI_CLEAR_,       \
+                    mt__internal__total_asserts_done_);                                                                                               \
+        if (mt__internal__total_assert_success_count_ == mt__internal__total_asserts_done_) {                                                         \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total assertions succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,  \
+                        mt__internal__total_assert_success_count_);                                                                                   \
+            MT_PRINT_OK(MT__INTERNAL__ANSI_GREEN_ MT__INTERNAL__ANSI_BOLD_ "Total assertions failed: .............. %d\n" MT__INTERNAL__ANSI_CLEAR_,  \
+                        mt__internal__total_assert_failure_count_);                                                                                   \
+        } else {                                                                                                                                      \
+            MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total assertions succeeded: ........... %d\n" MT__INTERNAL__ANSI_CLEAR_,   \
+                        mt__internal__total_assert_success_count_);                                                                                   \
+            MT_PRINT_ERR(MT__INTERNAL__ANSI_RED_ MT__INTERNAL__ANSI_BOLD_ "Total assertions failed: .............. %d\n" MT__INTERNAL__ANSI_CLEAR_,   \
+                        mt__internal__total_assert_failure_count_);                                                                                   \
+        }                                                                                                                                             \
     } while (0)
 
 #define MT_EXIT_CODE mt__internal__total_test_failure_count_ == 0 ? 0 : 1
