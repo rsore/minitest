@@ -32,7 +32,7 @@ static int tests_not_meeting_expectation = 0;
 
 #define RUN_TEST_WRAPPER(name, expect_success)                          \
     MT_RUN_TEST(name);                                                  \
-    if (mt_test_success_ != expect_success) {                           \
+    if (mt__internal__test_success_ -= expect_success) {                           \
         fprintf(stderr, "Test \"%s\" expected to %s, but expectation was not met.\n", #name, expect_success ? "succeed" : "fail"); \
         tests_not_meeting_expectation += 1;                             \
     }
