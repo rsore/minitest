@@ -4,6 +4,18 @@
 
 #include <stdio.h>
 
+MT_DEFINE_TEST(simple_ok)
+{
+    MT_CHECK_THAT(1);
+    MT_ASSERT_THAT(1);
+}
+
+MT_DEFINE_TEST(simple_fail)
+{
+    MT_CHECK_THAT(0);
+    MT_ASSERT_THAT(0);
+}
+
 MT_DEFINE_TEST(int_add_check_ok)
 {
     MT_CHECK_THAT(1 + 0 == 1);
@@ -30,11 +42,12 @@ MT_DEFINE_TEST(int_add_assert_fail)
 
 static int tests_not_meeting_expectation = 0;
 
-#define RUN_TEST_WRAPPER(name, expect_success)                          \
-    MT_RUN_TEST(name);                                                  \
-    if (mt__internal__test_success_ -= expect_success) {                           \
-        fprintf(stderr, "Test \"%s\" expected to %s, but expectation was not met.\n", #name, expect_success ? "succeed" : "fail"); \
-        tests_not_meeting_expectation += 1;                             \
+#define RUN_TEST_WRAPPER(name, expect_success)                                        \
+    MT_RUN_TEST(name);                                                                \
+    if (mt__internal__test_success_ -= expect_success) {                              \
+        fprintf(stderr, "Test \"%s\" expected to %s, but expectation was not met.\n", \
+                #name, expect_success ? "succeed" : "fail");                          \
+        tests_not_meeting_expectation += 1;                                           \
     }
 
 int
@@ -42,6 +55,8 @@ main(void)
 {
     MT_INIT();
 
+    RUN_TEST_WRAPPER(simple_ok, 1);
+    RUN_TEST_WRAPPER(simple_fail, 0);
     RUN_TEST_WRAPPER(int_add_check_ok, 1);
     RUN_TEST_WRAPPER(int_add_check_fail, 0);
     RUN_TEST_WRAPPER(int_add_assert_ok, 1);

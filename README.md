@@ -6,6 +6,7 @@ A minimal single‑header test library for C.
 Public domain (Unlicense) — free for any use.
 
 ## Features
+
 - Single file, drop‑in.
 - Colored output (ANSI) with optional disable flag.
 - `CHECK_THAT` (non‑fatal) and `ASSERT_THAT` (fatal) assertions.
@@ -43,3 +44,23 @@ main(void)
     return MT_EXIT_CODE;
 }
 ```
+
+## Tested platforms and compilers
+
+### Linux
+- **Compilers:** GCC 14, Clang 20
+- **C standards:** C99, C11, C17, C23
+- **C++ standards:** C++11, C++14, C++17, C++20, C++23, C++26
+- **Flags:** `-Wall -Wextra -Werror -pedantic-errors`
+
+### Windows
+- **Compiler:** MSVC 2022
+- **C standards:** C11, C17
+- **C++ standards:** C++14, C++17, C++20, C++latest
+- **Flags:** `/W4 /WX`
+
+### macOS
+- **Compiler:** Apple Clang (latest)
+- **C standards:** C99, C11, C17, C2x
+- **C++ standards:** C++11, C++14, C++17, C++20, C++2b
+- **Flags:** `-Wall -Wextra -Werror -pedantic-errors`
