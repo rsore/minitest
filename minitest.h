@@ -4,7 +4,7 @@
  *  | \_/ | | | ' | | | | | _|`._`. | |
  *  |_| |_|_|_|\__|_| |_| |___|___/ |_|
  *
- *  minitest.h — v1.1.1
+ *  minitest.h — v1.1.2
  *
  *
  *  This file is placed in the public domain.
@@ -105,7 +105,7 @@ static int mt__internal__total_assert_failure_count_;
     } while (0)
 
 #define MT_DEFINE_TEST(name) \
-    void MT__INTERNAL__NAMEOF_TEST_FUNC_(name)(void)
+    static void MT__INTERNAL__NAMEOF_TEST_FUNC_(name)(void)
 
 #define MT_RUN_TEST(name)                                                                                                                 \
     do {                                                                                                                                  \
