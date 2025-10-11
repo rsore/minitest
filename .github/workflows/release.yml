@@ -21,3 +21,28 @@ jobs:
           files: minitest.h
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Clone collection repository
+        run: |
+          git clone https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/rsore/rshlc.git rshlc
+
+      - name: Copy file
+        run: |
+          cp minitest.h rshlc/minitest.h
+
+      - name: Commit and push changes
+        working-directory: rshlc
+        run: |
+          git add .
+          git commit -m "Update minitest.h from release $GITHUB_REF_NAME"
+          git push

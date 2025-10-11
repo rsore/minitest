@@ -4,7 +4,7 @@
  *  | \_/ | | | ' | | | | | _|`._`. | |
  *  |_| |_|_|_|\__|_| |_| |___|___/ |_|
  *
- *  minitest.h — v1.1.2
+ *  minitest.h — v1.1.3
  *
  *
  *  This file is placed in the public domain.
