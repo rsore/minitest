@@ -4,7 +4,7 @@
 
 `minitest.h` is a single-header library: copy it into your project and start writing tests.
 No build system or extra dependencies required.
-It’s lightweight, portable across major platforms, and public domain.
+It’s lightweight and portable across major platforms.
 
 ## Features
 
@@ -65,3 +65,7 @@ main(void)
 - **C standards:** C99, C11, C17, C2x
 - **C++ standards:** C++11, C++14, C++17, C++20, C++2b
 - **Flags:** `-Wall -Wextra -Werror -pedantic-errors`
+
+## License
+`minitest.h` is licensed under the 3-Clause BSD license.
+See the `LICENSE` file for details.
